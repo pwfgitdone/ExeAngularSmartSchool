@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-sm-6" *ngIf="disciplinaSelecionado">
+        <app-titulo [titulo]="disciplinaSelecionado.id === 0 ? 'Nova Disciplina' : ('Cód. Disciplina #'+ disciplinaSelecionado.id)">
+            <button class="btn btn-sm btn-outline-danger" (click)="voltar()">Fechar</button>
+        </app-titulo>
+        <form [formGroup]="disciplinaForm" (submit)="disciplinaSubmit()">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" formControlName="nome" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="professorId">Professor</label>
+                <select class="form-select" id="professorId" formControlName="professorId">
+                    <option *ngFor="let professor of professores" [value]="professor.id"
+                    [attr.selected]="professor.id==disciplinaSelecionado.professor.id ? true : null">{{professor.nome}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <hr>
+                <button class="btn btn-success" [disabled]="!disciplinaForm.valid">Salvar</button>
+            </div>
+        </form>
+    </div>
+    <div [ngClass]="{'col-sm-6': disciplinaSelecionado, 'col-sm-12': !disciplinaSelecionado}">
+        <app-titulo [titulo]="titulo">
+            <button class="btn btn-sm btn-outline-success" (click)="disciplinaNovo()">Cadastrar Disciplina</button>
+        </app-titulo>
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Visualizar</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Professor</th>
+                    <th scope="col">Opções</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let disciplina of disciplinas">
+                    <td>
+                        <button (click)="disciplinaSelect(disciplina)" class="text-dark btn btn-sm btn-outline-warning">detalhe</button>
+                    </td>
+                    <td scope="row">{{disciplina.id}}</td>
+                    <td>{{disciplina.nome}}</td>
+                    <td>{{disciplina.professor.nome}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-danger" (click)="deletarDisciplina(disciplina.id)">deletar</button>
+                        </div> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+<ng-template #template>
+    <div class="modal-body">
+        <app-professores></app-professores>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn-close close pull-right"
+            style="font-size: medium; font-weight: 500;"
+            aria-label="Close" (click)="modalRef.hide()">
+        </button>
+    </div>
+</ng-template>
